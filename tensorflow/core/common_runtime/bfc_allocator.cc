@@ -123,9 +123,18 @@ bool BFCAllocator::Extend(size_t rounded_bytes) {
     }
   }
 
+  
+
   if (mem_addr == nullptr) {
     return false;
   }
+
+  LOG(INFO) << "[Extend] " << name_ << ": "
+             << rounded_bytes
+             << " bytes requested, "
+             << bytes
+             << " bytes allocated."
+             << " address: " << mem_addr;
 
   if (!increased_allocation) {
     // Increase the region size of the next required allocation.
@@ -257,6 +266,12 @@ void* BFCAllocator::AllocateRawInternal(size_t unused_alignment,
   mutex_lock l(lock_);
   void* ptr = FindChunkPtr(bin_num, rounded_bytes, num_bytes);
   if (ptr != nullptr) {
+    LOG(INFO) << "[Alloc] " << name_ << ": "
+             << num_bytes
+             << " bytes requested, "
+             << rounded_bytes
+             << " bytes allocated."
+             << " address: " << ptr;
     return ptr;
   }
 
@@ -264,6 +279,12 @@ void* BFCAllocator::AllocateRawInternal(size_t unused_alignment,
   if (Extend(rounded_bytes)) {
     ptr = FindChunkPtr(bin_num, rounded_bytes, num_bytes);
     if (ptr != nullptr) {
+      LOG(INFO) << "[Alloc] " << name_ << ": "
+             << num_bytes
+             << " bytes requested, "
+             << rounded_bytes
+             << " bytes allocated."
+             << " address: " << ptr;
       return ptr;
     }
   }
@@ -278,6 +299,8 @@ void* BFCAllocator::AllocateRawInternal(size_t unused_alignment,
     DumpMemoryLog(rounded_bytes);
     LOG(WARNING) << RenderOccupancy();
   }
+
+  
   return nullptr;
 }
 
@@ -381,6 +404,11 @@ void BFCAllocator::DeallocateRawInternal(void* ptr) {
     LOG(ERROR) << "tried to deallocate nullptr";
     return;
   }
+
+  LOG(INFO) << "[Dealloc] " << name_ << ": "
+             << AllocatedSize(ptr) << " bytes allocated."
+             << " address: " << ptr;
+
   mutex_lock l(lock_);
 
   // Find the chunk from the ptr.
@@ -393,6 +421,7 @@ void BFCAllocator::DeallocateRawInternal(void* ptr) {
   if (VLOG_IS_ON(4)) {
     LOG(INFO) << "F: " << RenderOccupancy();
   }
+
 }
 
 // Merges h1 and h2 when Chunk(h1)->next is h2 and Chunk(h2)->prev is c1.
