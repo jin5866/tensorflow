@@ -50,8 +50,7 @@ class DeviceMemoryBase {
   // region. An opaque pointer may be provided -- see header for details on the
   // opacity of that pointer.
   explicit DeviceMemoryBase(void *opaque = nullptr, uint64 size = 0,
-                            bool is_sub_buffer = false)
-      : opaque_(opaque), size_(size), is_sub_buffer_(is_sub_buffer) {}
+                            bool is_sub_buffer = false);
 
   // Returns whether the backing memory is the null pointer.
   // A `== nullptr` convenience method is also provided.

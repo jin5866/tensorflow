@@ -442,13 +442,27 @@ void CUDAExecutor::VlogOccupancyInfo(const KernelBase &kernel,
 }
 
 void *CUDAExecutor::Allocate(uint64 size) {
-  return CUDADriver::DeviceAllocate(context_, size);
+  void * ret = CUDADriver::DeviceAllocate(context_, size);
+  LOG(INFO) << "[Extend] " << "CUDAExecutor::Allocate" << ": "
+             << size
+             << " bytes requested, "
+             << size
+             << " bytes allocated."
+             << " address: " << ret;
+  return ret;
 }
 
 void *CUDAExecutor::AllocateSubBuffer(DeviceMemoryBase *mem,
                                       uint64 offset_bytes, uint64 size_bytes) {
   // offset and size are in bytes, so char* works as the pointer type.
-  return reinterpret_cast<char *>(mem->opaque()) + offset_bytes;
+  void* ret = reinterpret_cast<char *>(mem->opaque()) + offset_bytes;
+  LOG(INFO) << "[Extend] " << "CUDAExecutor::AllocateSubBuffer" << ": "
+             << size_bytes
+             << " bytes requested, "
+             << size_bytes
+             << " bytes allocated."
+             << " address: " << ret;
+  return ret;
 }
 
 void CUDAExecutor::Deallocate(DeviceMemoryBase *mem) {
