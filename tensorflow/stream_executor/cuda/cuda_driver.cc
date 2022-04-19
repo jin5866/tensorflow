@@ -939,6 +939,14 @@ CUDADriver::ContextGetSharedMemConfig(CudaContext* context) {
     return nullptr;
   }
   void *ptr = reinterpret_cast<void *>(result);
+
+  LOG(INFO) << "[Extend] " << "CUDADriver::DeviceAllocate" << ": "
+             << bytes
+             << " bytes requested, "
+             << bytes
+             << " bytes allocated."
+             << " address: " << ptr;
+
   VLOG(2) << "allocated " << ptr << " for context " << context << " of "
           << bytes << " bytes";
   return ptr;

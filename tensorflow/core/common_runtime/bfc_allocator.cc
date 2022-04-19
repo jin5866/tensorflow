@@ -266,12 +266,7 @@ void* BFCAllocator::AllocateRawInternal(size_t unused_alignment,
   mutex_lock l(lock_);
   void* ptr = FindChunkPtr(bin_num, rounded_bytes, num_bytes);
   if (ptr != nullptr) {
-    LOG(INFO) << "[Alloc] " << name_ << ": "
-             << num_bytes
-             << " bytes requested, "
-             << rounded_bytes
-             << " bytes allocated."
-             << " address: " << ptr;
+
     return ptr;
   }
 
@@ -279,12 +274,7 @@ void* BFCAllocator::AllocateRawInternal(size_t unused_alignment,
   if (Extend(rounded_bytes)) {
     ptr = FindChunkPtr(bin_num, rounded_bytes, num_bytes);
     if (ptr != nullptr) {
-      LOG(INFO) << "[Alloc] " << name_ << ": "
-             << num_bytes
-             << " bytes requested, "
-             << rounded_bytes
-             << " bytes allocated."
-             << " address: " << ptr;
+      
       return ptr;
     }
   }
@@ -346,6 +336,14 @@ void* BFCAllocator::FindChunkPtr(BinNum bin_num, size_t rounded_bytes,
             std::max(stats_.max_bytes_in_use, stats_.bytes_in_use);
         stats_.max_alloc_size =
             std::max<std::size_t>(stats_.max_alloc_size, chunk->size);
+
+        LOG(INFO) << "[Alloc] " << name_ << ": "
+             << num_bytes
+             << " bytes requested, "
+             << chunk->size
+             << " bytes allocated."
+             << " address: " << chunk->ptr
+             << " min chunk size: " << rounded_bytes;
 
         VLOG(4) << "Returning: " << chunk->ptr;
         if (VLOG_IS_ON(4)) {

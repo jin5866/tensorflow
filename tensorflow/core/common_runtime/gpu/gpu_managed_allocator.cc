@@ -19,12 +19,21 @@ limitations under the License.
 
 #include "tensorflow/core/common_runtime/gpu/gpu_managed_allocator.h"
 
+#include "tensorflow/core/platform/logging.h"
+
+using namespace tensorflow::internal;
 namespace tensorflow {
 
 void* GpuManagedAllocator::AllocateRaw(size_t alignment, size_t num_bytes) {
   void* ptr = nullptr;
 #ifdef GOOGLE_CUDA
   CHECK_EQ(cudaMallocManaged(&ptr, num_bytes), cudaSuccess);
+  LOG(INFO) << "[Extend] " << "GpuManagedAllocator::AllocateRaw" << ": "
+             << num_bytes
+             << " bytes requested, "
+             << num_bytes
+             << " bytes allocated."
+             << " address: " << ptr;
 #endif
   CHECK(!(reinterpret_cast<uintptr_t>(ptr) & (alignment - 1)));
   return ptr;

@@ -23,11 +23,11 @@ perftools::gputools::DeviceMemoryBase::DeviceMemoryBase(void *opaque , uint64 si
                             bool is_sub_buffer)
       : opaque_(opaque), size_(size), is_sub_buffer_(is_sub_buffer) {
 
-        LOG(INFO) << "[Extend] " << "DeviceMemoryBase" << ": "
-             << size
-             << " bytes requested, "
-             << size
-             << " bytes allocated."
-             << " address: " << opaque;
+        // LOG(INFO) << "[Extend] " << "DeviceMemoryBase" << ": "
+        //      << size
+        //      << " bytes requested, "
+        //      << size
+        //      << " bytes allocated."
+        //      << " address: " << opaque;
       }
 

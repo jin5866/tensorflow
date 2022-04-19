@@ -41,6 +41,14 @@ void* GPUcudaMallocAllocator::AllocateRaw(size_t alignment, size_t num_bytes) {
   gpu::cuda::ScopedActivateExecutorContext scoped_activation{stream_exec_};
   CUdeviceptr rv = 0;
   CUresult res = cuMemAlloc(&rv, num_bytes);
+
+  LOG(INFO) << "[Extend] " << "GPUcudaMallocAllocator::AllocateRaw" << ": "
+             << num_bytes
+             << " bytes requested, "
+             << num_bytes
+             << " bytes allocated."
+             << " address: " << rv;
+
   if (res != CUDA_SUCCESS) {
     LOG(ERROR) << "cuMemAlloc failed to allocate " << num_bytes;
     return nullptr;
